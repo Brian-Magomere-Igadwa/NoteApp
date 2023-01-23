@@ -39,6 +39,7 @@ object AppModule {
     fun provideNoteUseCases(repository: NoteRepository):NoteUseCases{
         return NoteUseCases(
             getNotes= GetNotes(repository),
+            getNote= GetNote(repository),
             deleteNote= DeleteNote(repository),
             addNote= AddNote(repository)
         )
