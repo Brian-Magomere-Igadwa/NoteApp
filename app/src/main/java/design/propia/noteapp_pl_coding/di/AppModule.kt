@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import design.propia.noteapp_pl_coding.feature_note.data.data_source.NoteDatabase
 import design.propia.noteapp_pl_coding.feature_note.data.repository.NoteRepositoryImpl
 import design.propia.noteapp_pl_coding.feature_note.domain.repository.NoteRepository
+import design.propia.noteapp_pl_coding.feature_note.domain.use_cases.AddNote
 import design.propia.noteapp_pl_coding.feature_note.domain.use_cases.DeleteNote
 import design.propia.noteapp_pl_coding.feature_note.domain.use_cases.GetNotes
 import design.propia.noteapp_pl_coding.feature_note.domain.use_cases.NoteUseCases
@@ -38,7 +39,8 @@ object AppModule {
     fun provideNoteUseCases(repository: NoteRepository):NoteUseCases{
         return NoteUseCases(
             getNotes= GetNotes(repository),
-            deleteNote= DeleteNote(repository)
+            deleteNote= DeleteNote(repository),
+            addNote= AddNote(repository)
         )
     }
 }
