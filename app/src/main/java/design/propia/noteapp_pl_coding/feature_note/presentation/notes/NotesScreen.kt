@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import design.propia.noteapp_pl_coding.feature_note.presentation.notes.components.NoteItem
 import design.propia.noteapp_pl_coding.feature_note.presentation.notes.components.OrderSection
+import design.propia.noteapp_pl_coding.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,7 +34,9 @@ fun NotesScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(Screen.AddEditNoteScreen.route)
+                },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
@@ -67,34 +70,40 @@ fun NotesScreen(
                 exit = fadeOut() + slideOutVertically(),
             ) {
                 OrderSection(
-                    modifier= Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
                     noteOrder = state.noteOrder,
-                    onOrderChange ={
+                    onOrderChange = {
                         viewModel.onEvent(NotesEvent.Order(it))
-                    } )
+                    })
             }
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(modifier=Modifier.fillMaxSize()){
-                items(state.notes){ note->
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state.notes) { note ->
                     NoteItem(
                         note = note,
-                        modifier=Modifier.fillMaxWidth().clickable {  },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(
+                                    Screen.AddEditNoteScreen.route + "?noteId=${note.id}&noteColor${note.color}"
+                                )
+                            },
                         onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
-                                val result=scaffoldState.snackbarHostState.showSnackbar(
-                                    message="Note deleted",
+                                val result = scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Note deleted",
                                     actionLabel = "Undo"
                                 )
-                                if(result==SnackbarResult.ActionPerformed){
+                                if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }
                         }
                     )
-                    Spacer(modifier=Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 
